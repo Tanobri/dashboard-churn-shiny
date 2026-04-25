@@ -1,0 +1,10 @@
+name: dashboard-churn
+title:
+username: graficas-churn-obrian-andres
+account: graficas-churn-obrian-andres
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17189225
+bundleId: 11883274
+url: https://graficas-churn-obrian-andres.shinyapps.io/dashboard-churn/
+version: 1
