@@ -1,62 +1,52 @@
-# Dashboard Premium Analítico de Churn (R / Shiny)
+# Dashboard Premium Analítico de Churn (Shiny/R)
 
-Un dashboard interactivo y reactivo construido con **R** y **Shiny**, enfocado en el análisis de retención de clientes bancarios. Este proyecto demuestra que Shiny no solo sirve para aplicaciones académicas, sino que puede presentar interfaces estéticas de nivel ejecutivo (Premium/Glassmorphism) con **reactividad en tiempo real** utilizando el ecosistema `tidyverse`.
+## Descripción
+Dashboard web interactivo enfocado en el análisis de retención de clientes bancarios (Churn). Transforma 10,000 registros en inteligencia accionable aplicando cálculos de Tasas Relativas de Churn y filtrado cruzado mediante programación reactiva (`dplyr`) y visualizaciones en `plotly`.
 
-## 🛠️ Tecnologías Empleadas
+## Dataset
+- **Fuente**: Kaggle
+- **URL**: [Bank Customer Churn Dataset](https://www.kaggle.com/datasets/barelydedicated/bank-customer-churn-modeling) (Archivo incluido en el repo)
+- **Descripción**: Contiene 10,000 perfiles de clientes de un banco europeo, incluyendo variables demográficas (edad, género, geografía), financieras (score crediticio, salario estimado, balance) y temporales (años de tenencia), con una etiqueta binaria (`Exited`) que indica si abandonaron el banco.
 
-- **Shiny:** Framework de R para construir aplicaciones web interactivas mediante el patrón UI/Server.
-- **Plotly (R):** Integración nativa de `plotly` en R para renderizar las gráficas vectoriales interactivas con tooltips asíncronos y zoom.
-- **dplyr (Tidyverse):** Motor analítico para manipulación de datos, utilizado en expresiones `reactive({...})` para filtrar (`filter`), agrupar (`group_by`) y resumir (`summarise`) los datos al instante según las selecciones del usuario.
-- **HTML/CSS Nativo:** Estilización personalizada mediante inyección de `tags$style` y clases CSS customizadas (Glassmorphism, Grid Layout) para escapar del diseño convencional de Bootstrap que Shiny usa por defecto.
+## Hallazgos Principales
+1. **Hallazgo 1 (Tasa Base Crítica)**: El 20.4% de los clientes registrados ha abandonado el banco, marcando una pérdida crítica de ingresos que establece la urgencia del proyecto.
+2. **Hallazgo 2 (Riesgo Alemán)**: Alemania presenta una tasa de abandono extrema (32.4%), duplicando a los mercados de Francia y España, sugiriendo una falla estructural localizada.
+3. **Hallazgo 3 (Vulnerabilidad Demográfica)**: Los clientes adultos entre 40 y 55 años son el grupo con mayor propensión a la deserción, requiriendo estrategias de fidelización senior.
+4. **Hallazgo 4 (Factor Crediticio Absoluto)**: Los clientes con score crediticio bajo (300-500) abandonan masivamente independientemente de su nivel salarial, descartando el ingreso económico como factor detonante.
+5. **Hallazgo 5 (Crisis de Onboarding y Fatiga)**: Existe una ruptura temprana severa durante el Año 0 (Falla de Onboarding), y un peligro de fatiga de producto a partir del Año 9 de tenencia.
 
-## 🚀 Cómo Ejecutar Localmente
+## Visualizaciones Implementadas
+1. **Gráfico de Anillo de composición porcentual** sobre la tasa global de abandono.
+2. **Gráfico de Barras semaforizado** comparando el impacto geográfico (países).
+3. **Histograma Interactivo** de distribución de edad con un área focalizada de máximo riesgo.
+4. **Mapa de Calor (Heatmap) cruzado** mostrando la relación entre Score Crediticio y Salario Estimado.
+5. **Serie de Tiempo (Time-Series Spline)** mostrando la evolución de la retención según años de tenencia.
 
-1. Asegúrate de tener **R** y **RStudio** instalados en tu computadora.
-2. Abre RStudio e instala los paquetes necesarios ejecutando en la consola:
-   ```R
-   install.packages(c("shiny", "plotly", "dplyr"))
-   ```
-3. Abre el archivo `app.R` ubicado en esta carpeta.
-4. Haz clic en el botón **"Run App"** en la barra superior del editor de RStudio (o ejecuta `shiny::runApp()` en la consola).
-5. Se abrirá una ventana interactiva (puedes hacer clic en "Open in Browser" para verlo a pantalla completa).
+## Tecnologías Utilizadas
+- Framework: Shiny
+- Lenguaje: R
+- Bibliotecas: shiny, plotly, dplyr
 
----
+## Instalación y Ejecución Local
+### Requisitos Previos
+- R y RStudio instalados.
 
-## 📊 Arquitectura de Visualizaciones (Analíticas)
+### Instrucciones
+```bash
+# Clonar repositorio
+git clone https://github.com/Tanobri/dashboard-churn-shiny.git
+cd dashboard-churn-shiny
 
-La interfaz utiliza el modelo reactivo de Shiny (`selectInput` y `reactive`) para filtrar dinámicamente los países y reconstruir la narrativa y gráficas instantáneamente:
+# En RStudio, instalar dependencias:
+# install.packages(c("shiny", "plotly", "dplyr"))
 
-### 1. Resumen Global (Donut Chart KPI)
-- **Visualización:** Gráfico de anillo interactivo con panel lateral de indicadores KPI de clientes que permanecen y que abandonan.
-- **Objetivo:** Establecer la tasa base de abandono (20.4%) del corporativo como el punto crítico de referencia. Incluye un *Banner de Impacto* introductorio.
-
-### 2. Tasa de Churn por País (Bar Chart Semaforizado)
-- **Visualización:** Barras ordenadas por urgencia con colorimetría semafórica.
-- **Objetivo:** Exponer disparidades regionales brutales que justifican enfocar campañas de retención en mercados de altísimo riesgo como el alemán.
-
-### 3. Tasa de Churn por Rango de Edad (Histograma Interactivo)
-- **Visualización:** Histograma interactivo con `selectInput` de país. Área focalizada remarcando el tramo crítico (40-55 años).
-- **Objetivo:** Quebrar el mito del volumen y focalizar la demografía específica para personalizar incentivos, ajustando el análisis al país seleccionado en tiempo real.
-
-### 4. Perfil Financiero (Heatmap de Riesgo 3×3)
-- **Visualización:** Matriz cruzando nivel de salario (terciles calculados en R) y score crediticio.
-- **Objetivo:** Demostrar que el factor destructor absoluto es puramente crediticio, sin importar su ingreso (las métricas y leyendas se recalculan dinámicamente al cambiar de país).
-
-### 5. Tenencia Evolutiva (Time-Series con Reactividad)
-- **Visualización:** Línea spline suavizada con marcadores que cambian de color si superan el promedio reactivo (`global_rate`).
-- **Objetivo:** Radiografiar el ciclo de vida del cliente, señalando la "Falla de Onboarding" inicial y el riesgo tardío.
-
-### 6. Conclusión Estratégica (Accionabilidad Data-Driven)
-- **Visualización:** Diseño en Grid de 3 columnas (UI inyectada en HTML) con diseño oscuro de tarjetas de campaña.
-- **Objetivo:** Transformar los datos en 3 planes de acción directos: *Onboarding Seguro*, *Fidelización Senior* y *Alivio Financiero*.
-
----
-
-## 📁 Estructura del Proyecto
-
+# Ejecutar aplicación:
+# Abre el archivo app.R y presiona el botón "Run App"
 ```
-graficas_churn/
-├── app.R                  # Aplicación Shiny (UI, CSS, Lógica Reactiva y Renderizado Plotly)
-├── Churn_Modelling.csv    # Dataset fuente (10,000 registros)
-└── README.md              # Documentación
-```
+
+## Despliegue
+URL en producción: [Enlace a la app desplegada en shinyapps.io]
+
+## Autores
+Obrian Sanchez
+Andres Cardoso
