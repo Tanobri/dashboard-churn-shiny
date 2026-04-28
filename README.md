@@ -45,7 +45,7 @@ cd dashboard-churn-shiny
 ```
 
 ## Despliegue
-URL en producción: [Enlace a la app desplegada en shinyapps.io]
+URL en producción: https://graficas-churn-obrian-andres.shinyapps.io/dashboard-churn/
 
 ## Autores
 Obrian Sanchez
